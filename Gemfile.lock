@@ -1,0 +1,14 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    mime-types (1.22)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
+    socketio-client (0.0.3)
+      rest-client
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  socketio-client
