@@ -1,81 +1,42 @@
 #! /usr/bin/env ruby
 # -*- coding: utf-8 -*-
+#
+require 'rubygems'
+require 'bundler/setup'
 require "SocketIO"
 require "readline"
-require "curses"
+require 'optparse'
+$:.unshift File.dirname(__FILE__)
+require "RyanCom/Core"
+require "RyanCom/Output"
+require "RyanCom/Utils"
+require "RyanCom/Comment"
 
+class String
+  def ljust(width, padding=' ')
+    padding_size = [0, width - size].max
+    self + padding * padding_size
+  end
+  def rjust(width, padding=' ')
+    padding_size = [0, width - size].max
+    padding * padding_size + self
+  end
+  def center(width, padding=' ')
+    padding_size = [0, width - size].max
+    padding * ( padding_size / 2 ) + self + padding * ( ( padding_size + 1 ) / 2 )
+  end
 
-Curses.init_screen
-Curses.start_color
-Curses.init_pair 1, Curses::COLOR_YELLOW, Curses::COLOR_BLACK
-Curses.init_pair 2, Curses::COLOR_BLACK, Curses::COLOR_RED
-
-$messages=[]
-$title="ScreenX.tv Comment Viewer".center(Curses.cols)
-$status="".center(Curses.cols, "*")
-
-def comment(data)
-  data.each do |d|
-    message ="#{d["name"]} : #{d["message"]}"
-    mes message
+  def size
+    each_char.map{|c| c.bytesize == 1 ? 1 : 2}.reduce(0, &:+)
   end
 end
-
-def viewer(data)
-  data.each do |d|
-    $status="( #aki017 #{d["viewer"]} / #{d["total_viewer"]} )".rjust(Curses.cols, "*")
-    # Curses.addstr message
-    draw
+ 
+channel = nil; 
+OptionParser.new do |opt|
+  opt.on('--channel [VALUE]',"set channel") do |v|
+    channel = v
   end
+  opt.parse!(ARGV)
 end
 
-def mes(data, time=Time.now)
-  $messages << {"text"=>data, "time"=>time}
-  draw
-end
-
-def draw
-  l = $messages.size
-  lines = Curses.lines
-  cols = Curses.cols
-  pdata = (l > lines - 3)? $messages[l-lines+3, l] : $messages
-
-  Curses.clear
-  pdata.each_with_index do |i, count|
-    Curses.setpos count+1, 0
-    Curses.addstr "#{i["text"]}"
-    Curses.setpos count+1, cols-10
-    Curses.addstr i["time"].strftime("< %H:%M:%S")
-  end
-  Curses.setpos 0, 0
-  Curses.addstr $title
-  Curses.setpos Curses.lines()-2, 0
-  Curses.addstr $status
-  Curses.setpos Curses.lines()-1, 0
-  Curses.refresh
-end
-  uri = URI("http://screenx.tv")
-  uri.port = 8800
-  client = SocketIO.connect( uri, sync: true) do
-    before_start do
-      on_message {|message| puts message}
-      on_event('chat'){ |data| comment data}
-      on_event('viewer'){ |data| viewer data}
-      on_disconnect {puts "I GOT A DISCONNECT"}
-    end
-
-    after_start do
-      emit("init", {channel: 'aki017'})
-    end
-  end
-begin
-  draw
-  loop do
-    system "stty echo"
-    mes Readline.readline("test : ")
-    system "stty -echo"
-  end
-ensure
-  Curses.close_screen
-end
-
+RyanCom.start channel
