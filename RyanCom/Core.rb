@@ -12,7 +12,7 @@ module RyanCom
     def viewer(data)
       data.each do |d|
         @status="( #aki017 #{d["viewer"]} / #{d["total_viewer"]} )"
-        system "say '#{d["viewer"]}にんが見てます'&"
+        # system "say '#{d["viewer"]}にんが見てます'&"
 
         print "\e[1F"
         print "\e[1M"
@@ -32,14 +32,10 @@ module RyanCom
           on_event('viewer'){ |data| RyanCom::viewer data}
           on_disconnect {puts "I GOT A DISCONNECT"}
         end
-
-        after_start do
-          emit("init", {channel: "private/5g83l6VKef5p1Nff"})
-        end
-
       end
+      @c.emit("init", {channel: @channel})
 
-      write Comment.new("System","#{c}に接続しました"),{:refresh=>false,:line=>0}
+      write Comment.new("System","#{@channel}に接続しました"),{:refresh=>false,:line=>0}
     end
 
     def post(message)
@@ -48,7 +44,7 @@ module RyanCom
 
 
     def start(channel)
-      @channel ||= channel
+      @channel = channel || @channel
       puts "ScreenX.tv Comment Viewer".center(detect_terminal_size()[0])
       puts "=" * detect_terminal_size()[0]
       write Comment.new("System","#{@channel}に接続します"),{:refresh=>false,:line=>0}

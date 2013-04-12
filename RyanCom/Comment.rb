@@ -7,7 +7,7 @@ module RyanCom
     end
 
     def write
-      system "say '#{message}'&"
+      # system "say '#{message}'&"
       cols = RyanCom::detect_terminal_size()[0]
       rtn = "\e[0G\e[K" 
       rtn << name.ljust(10)

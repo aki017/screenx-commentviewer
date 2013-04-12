@@ -1,5 +1,8 @@
 module RyanCom
   module Utils
+    def command_exists?(command)
+      ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
+    end
     def detect_terminal_size
       begin
         tiocgwinsz = 0x40087468
