@@ -2,17 +2,31 @@ module RyanCom
   @status="status"
   @channel="aki017"
   module Core
+    def inits
+      @inits ||= []
+    end
+
+    def init(&block)
+      inits << block
+    end
+
+    def _init
+      inits.each{|b|
+        class_eval(&b)
+      }
+    end
 
     def comment(data)
       data.each do |d|
+        dispatchEvent "comment",d
         write Comment.new(d["name"],d["message"])
       end
     end
 
     def viewer(data)
       data.each do |d|
+        dispatchEvent "viewer",d
         @status="( #aki017 #{d["viewer"]} / #{d["total_viewer"]} )"
-        # system "say '#{d["viewer"]}にんが見てます'&"
 
         print "\e[1F"
         print "\e[1M"
@@ -48,11 +62,13 @@ module RyanCom
 
 
     def start(channel)
+      _init
       @channel = channel || @channel
       puts "ScreenX.tv Comment Viewer".center(detect_terminal_size()[0])
       puts "=" * detect_terminal_size()[0]
       write Comment.new("System","#{@channel}に接続します"),{:refresh=>false,:line=>0}
       connect @channel
+
 
       trap("INT") { puts "end"; system "stty", stty_save; exit }
       while buf = Readline.readline("\e[48;5;247m\e[48;5;238m\e[38;5;254m" + "myname >\e[0m ")
