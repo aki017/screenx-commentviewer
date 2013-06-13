@@ -2,13 +2,13 @@ require 'open3'
 module RyanCom
   module Talk
     def say(text)
-      c = "echo"
+      c = nil
       if command_exists? "saykana"
         c = "saykana"
       else command_exists? "say"
         c = "say"
       end
-      Open3.popen3 c, text
+      Open3.popen3 c, text unless c.nil?
     end
 
   end
