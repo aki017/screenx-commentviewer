@@ -8,6 +8,7 @@ require "readline"
 require 'optparse'
 $:.unshift File.dirname(__FILE__)
 require "RyanCom/Core"
+require "RyanCom/EventListener"
 require "RyanCom/Output"
 require "RyanCom/Utils"
 require "RyanCom/Comment"
