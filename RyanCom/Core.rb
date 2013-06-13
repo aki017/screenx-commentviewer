@@ -1,6 +1,6 @@
 module RyanCom
   @status="status"
-  @channel="private/5g83l6VKef5p1Nff"
+  @channel="aki017"
   module Core
 
     def comment(data)
@@ -32,10 +32,14 @@ module RyanCom
           on_event('viewer'){ |data| RyanCom::viewer data}
           on_disconnect {puts "I GOT A DISCONNECT"}
         end
-      end
-      @c.emit("init", {channel: @channel})
 
-      write Comment.new("System","#{@channel}に接続しました"),{:refresh=>false,:line=>0}
+        after_start do
+          emit("init", {channel: c})
+        end
+
+      end
+
+      write Comment.new("System","#{c}に接続しました"),{:refresh=>false,:line=>0}
     end
 
     def post(message)
