@@ -3,7 +3,7 @@ module RyanCom
     attr_accessor :name, :message, :time
   
     def initialize(name, message, time=Time.now)
-      @name = name; @message = message; @time = time
+      @name = name || "NoName"; @message = message || "nil"; @time = time
     end
 
     def write

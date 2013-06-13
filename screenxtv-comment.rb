@@ -14,6 +14,7 @@ require "RyanCom/Output"
 require "RyanCom/Utils"
 require "RyanCom/Comment"
 require "RyanCom/Notify"
+require "RyanCom/ScreenX"
  
 channel = nil; 
 OptionParser.new do |opt|

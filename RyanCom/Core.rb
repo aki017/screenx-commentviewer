@@ -56,10 +56,6 @@ module RyanCom
       write Comment.new("System","#{c}に接続しました"),{:refresh=>false,:line=>0}
     end
 
-    def post(message)
-      raise NotImplementedError.new
-    end
-
 
     def start(channel)
       _init
@@ -68,13 +64,21 @@ module RyanCom
       puts "=" * detect_terminal_size()[0]
       write Comment.new("System","#{@channel}に接続します"),{:refresh=>false,:line=>0}
       connect @channel
+      @token = get_token_and_chats
 
 
       trap("INT") { puts "end"; system "stty", stty_save; exit }
       while buf = Readline.readline("\e[48;5;247m\e[48;5;238m\e[38;5;254m" + "myname >\e[0m ")
         exit if(buf == "/q")
-        p @c if(buf == "/c")
+        post buf unless buf[0]==":"
         write Comment.new("System","#{buf}"),{:refresh=>false,:line=>2}
+        if buf[0]==":" then
+          begin
+            comment [{"name"=>"System","message"=>eval(buf[1..-1])}]
+          rescue => exc
+            comment [{"name"=>"System","message"=>exc.inspect}]
+          end
+        end
         # post buf
       end
     end
