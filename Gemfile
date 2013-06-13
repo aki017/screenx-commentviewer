@@ -1,3 +1,3 @@
 source 'https://rubygems.org'
 
-gem "socketio-client" , :github => "dierbro/socket.io-ruby-client"
+gem "socketio-client"
