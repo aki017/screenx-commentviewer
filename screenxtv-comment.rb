@@ -13,6 +13,7 @@ require "RyanCom/Talk"
 require "RyanCom/Output"
 require "RyanCom/Utils"
 require "RyanCom/Comment"
+require "RyanCom/Notify"
 
 class String
   def ljust(width, padding=' ')

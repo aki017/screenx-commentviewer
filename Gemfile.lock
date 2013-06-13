@@ -1,14 +1,22 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    macaddr (1.6.1)
+      systemu (~> 2.5.0)
     mime-types (1.23)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    ruby-growl (4.0)
+      uuid (~> 2.3, >= 2.3.5)
     socketio-client (0.0.3)
       rest-client
+    systemu (2.5.2)
+    uuid (2.3.7)
+      macaddr (~> 1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  ruby-growl
   socketio-client
